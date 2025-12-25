@@ -4,7 +4,6 @@ class WorkoutRepository {
   static const String _workoutCompletionBox = 'workout_completion';
   static const String _currentWeekBox = 'current_week';
 
-  // Initialize boxes
   static Future<void> init() async {
     try {
       await Hive.openBox<Map>(_workoutCompletionBox);
@@ -14,7 +13,6 @@ class WorkoutRepository {
     }
   }
 
-  // Current Week Management
   static int getCurrentWeek() {
     try {
       final box = Hive.box<int>(_currentWeekBox);
@@ -35,7 +33,6 @@ class WorkoutRepository {
     }
   }
 
-  // Workout Completion Management
   static Map<String, Set<String>> getWorkoutCompletion() {
     try {
       final box = Hive.box<Map>(_workoutCompletionBox);

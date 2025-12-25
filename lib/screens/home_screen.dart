@@ -20,7 +20,6 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('HYPERTROPHY'),
         actions: [
-          // ✅ زر Program Info الجديد
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: () => context.pushNamed('program-info'),

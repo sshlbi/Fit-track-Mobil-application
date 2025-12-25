@@ -41,7 +41,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   @override
   void dispose() {
     _restTimer?.cancel();
-    _restTimer = null; // ✅ تنظيف الـ timer
+    _restTimer = null;
     super.dispose();
   }
 
@@ -628,7 +628,6 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     );
   }
 
-  // ✅ دالة _saveSet معدلة مع error handling
   Future<void> _saveSet(
       int setNumber, double weight, int reps, double rpe, String? notes) async {
     final setData = SetData(
@@ -649,7 +648,6 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
       _completedSets[key]!.add(setData);
     });
 
-    // ✅ حفظ في Database مع proper error handling
     try {
       final result = await DatabaseService.saveSet(setData);
       if (!result.isSuccess && mounted) {
