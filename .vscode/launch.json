@@ -1,0 +1,10 @@
+{
+    "configurations": [
+        {
+            "name": "Flutter (lib/core/constants/week_4_data.dart)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/core/constants/week_4_data.dart"
+        }
+    ]
+}
