@@ -7,6 +7,8 @@ import '../screens/workout_day_screen.dart';
 import '../screens/exercise_detail_screen.dart';
 import '../screens/progress_screen.dart';
 import '../screens/settings_screen.dart';
+import '../screens/rpe_calculator_screen.dart';
+import '../screens/body_weight_tracker_screen.dart';
 import '../models/exercise.dart';
 
 final routerProvider = Provider((ref) {
@@ -36,7 +38,7 @@ final routerProvider = Provider((ref) {
         path: '/workout-day',
         name: 'workout-day',
         pageBuilder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>;
+          final extra = state.extra as Map;
           return MaterialPage(
             key: state.pageKey,
             child: WorkoutDayScreen(
@@ -71,6 +73,22 @@ final routerProvider = Provider((ref) {
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
           child: const SettingsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/rpe-calculator',
+        name: 'rpe-calculator',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const RpeCalculatorScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/body-weight-tracker',
+        name: 'body-weight-tracker',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const BodyWeightTrackerScreen(),
         ),
       ),
     ],

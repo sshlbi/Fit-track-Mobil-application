@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/workout_provider.dart';
 import '../widgets/week_card.dart';
+import '../widgets/tool_card.dart';
 import '../utils/helpers.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -12,7 +13,6 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentWeek = ref.watch(currentWeekProvider);
     final weeks = ref.watch(programDataProvider);
-
     final validWeek = currentWeek.clamp(1, weeks.length);
     final currentWeekData = weeks[validWeek - 1];
 
@@ -97,8 +97,7 @@ class HomeScreen extends ConsumerWidget {
                         value: currentWeek / 12,
                         minHeight: 8,
                         backgroundColor: Colors.white24,
-                        valueColor:
-                            const AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor: const AlwaysStoppedAnimation(Colors.white),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -163,7 +162,40 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Tools',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                Icon(
+                  Icons.build,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 22,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ToolCard(
+              icon: Icons.calculate,
+              title: 'RPE Calculator',
+              description: 'Calculate weights based on RPE and estimate 1RM',
+              color: const Color(0xFF1E88E5),
+              onTap: () => context.push('/rpe-calculator'),
+            ),
+            const SizedBox(height: 12),
+            ToolCard(
+              icon: Icons.monitor_weight,
+              title: 'Body Weight Tracker',
+              description: 'Track your weight weekly and monitor progress',
+              color: const Color(0xFF4CAF50),
+              onTap: () => context.push('/body-weight-tracker'),
+            ),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

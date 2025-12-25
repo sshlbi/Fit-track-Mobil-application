@@ -45,10 +45,14 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) return;
         final shouldPop = await _showExitConfirmation(context);
-        return shouldPop ?? false;
+        if (shouldPop == true && context.mounted) {
+          Navigator.of(context).pop();
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -111,7 +115,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 8,
-              backgroundColor: Colors.white.withOpacity(0.1),
+              backgroundColor: Colors.white.withAlpha(25),
               valueColor: const AlwaysStoppedAnimation(Color(0xFF1E88E5)),
             ),
           ),
@@ -149,7 +153,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                       ? const Color(0xFF1E88E5)
                       : isCompleted
                           ? const Color(0xFF4CAF50)
-                          : Colors.white.withOpacity(0.1),
+                          : Colors.white.withAlpha(25),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
@@ -184,7 +188,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: Colors.black.withOpacity(0.4),
+      color: Colors.black.withAlpha(102),
       child: Row(
         children: [
           const Icon(Icons.timer, color: Color(0xFFFB8C00)),
@@ -212,7 +216,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
               child: LinearProgressIndicator(
                 value: progress,
                 minHeight: 6,
-                backgroundColor: Colors.white.withOpacity(0.1),
+                backgroundColor: Colors.white.withAlpha(25),
                 valueColor:
                     const AlwaysStoppedAnimation<Color>(Color(0xFFFB8C00)),
               ),
@@ -273,7 +277,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                   exercise.notes.first,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withAlpha(178),
                   ),
                 ),
             ],
@@ -295,7 +299,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E88E5).withOpacity(0.2),
+        color: const Color(0xFF1E88E5).withAlpha(50),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -329,9 +333,9 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withAlpha(12),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        border: Border.all(color: Colors.white.withAlpha(25)),
       ),
       child: Row(
         children: [
@@ -371,13 +375,13 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isCompleted
-              ? const Color(0xFF4CAF50).withOpacity(0.1)
+              ? const Color(0xFF4CAF50).withAlpha(25)
               : Theme.of(context).cardTheme.color,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isCompleted
                 ? const Color(0xFF4CAF50)
-                : Colors.white.withOpacity(0.1),
+                : Colors.white.withAlpha(25),
           ),
         ),
         child: Row(
@@ -388,7 +392,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
               decoration: BoxDecoration(
                 color: isCompleted
                     ? const Color(0xFF4CAF50)
-                    : Colors.white.withOpacity(0.1),
+                    : Colors.white.withAlpha(25),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
@@ -417,7 +421,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                       'Set $setNumber',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white.withOpacity(0.6),
+                        color: Colors.white.withAlpha(153),
                       ),
                     ),
             ),
@@ -441,7 +445,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
         color: Theme.of(context).cardTheme.color,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withAlpha(76),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -530,7 +534,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                   _currentExercise.name,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withAlpha(178),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -775,7 +779,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                   exercise.muscleGroup,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withOpacity(0.6),
+                    color: Colors.white.withAlpha(153),
                   ),
                 ),
                 const SizedBox(height: 16),
