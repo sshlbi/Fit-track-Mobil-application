@@ -20,7 +20,8 @@ class ActiveWorkoutScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState createState() => _ActiveWorkoutScreenState();
+  ConsumerState<ActiveWorkoutScreen> createState() =>
+      _ActiveWorkoutScreenState();
 }
 
 class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
@@ -40,6 +41,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   @override
   void dispose() {
     _restTimer?.cancel();
+    _restTimer = null; // ✅ تنظيف الـ timer
     super.dispose();
   }
 
@@ -626,8 +628,9 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     );
   }
 
-  void _saveSet(
-      int setNumber, double weight, int reps, double rpe, String? notes) {
+  // ✅ دالة _saveSet معدلة مع error handling
+  Future<void> _saveSet(
+      int setNumber, double weight, int reps, double rpe, String? notes) async {
     final setData = SetData(
       id: const Uuid().v4(),
       exerciseId: _currentExercise.id,
@@ -646,7 +649,29 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
       _completedSets[key]!.add(setData);
     });
 
-    DatabaseService.saveSet(setData);
+    // ✅ حفظ في Database مع proper error handling
+    try {
+      final result = await DatabaseService.saveSet(setData);
+      if (!result.isSuccess && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save set: ${result.error}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error saving set. Please try again.'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
 
     _startRestTimer();
   }

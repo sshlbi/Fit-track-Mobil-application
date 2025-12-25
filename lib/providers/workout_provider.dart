@@ -1,9 +1,7 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../models/workout_log.dart';
 import '../data/program_data.dart';
+import '../repositories/workout_repository.dart';
 
 final currentWeekProvider = StateNotifierProvider<CurrentWeekNotifier, int>(
   (ref) => CurrentWeekNotifier(),
@@ -14,16 +12,14 @@ class CurrentWeekNotifier extends StateNotifier<int> {
     _loadCurrentWeek();
   }
 
-  Future<void> _loadCurrentWeek() async {
-    final prefs = await SharedPreferences.getInstance();
-    state = prefs.getInt('currentWeek') ?? 1;
+  void _loadCurrentWeek() {
+    state = WorkoutRepository.getCurrentWeek();
   }
 
   Future<void> setWeek(int week) async {
     if (week < 1 || week > 12) return;
     state = week;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('currentWeek', week);
+    await WorkoutRepository.setCurrentWeek(week);
   }
 
   void nextWeek() {
@@ -46,33 +42,11 @@ class WorkoutLogsNotifier extends StateNotifier<List<WorkoutLog>> {
   }
 
   Future<void> _loadLogs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final logsJson = prefs.getStringList('workout_logs') ?? [];
-      final logs = logsJson.map((jsonStr) {
-        final json = jsonDecode(jsonStr) as Map<String, dynamic>;
-        return WorkoutLog.fromJson(json);
-      }).toList();
-      state = logs;
-    } catch (e) {
-      debugPrint('Error loading logs: $e');
-      state = [];
-    }
-  }
-
-  Future<void> _saveLogs() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final logsJson = state.map((log) => jsonEncode(log.toJson())).toList();
-      await prefs.setStringList('workout_logs', logsJson);
-    } catch (e) {
-      debugPrint('Error saving logs: $e');
-    }
+    state = [];
   }
 
   Future<void> addLog(WorkoutLog log) async {
     state = [...state, log];
-    await _saveLogs();
   }
 
   Future<void> updateLog(WorkoutLog log) async {
@@ -80,12 +54,10 @@ class WorkoutLogsNotifier extends StateNotifier<List<WorkoutLog>> {
       for (final item in state)
         if (item.id == log.id) log else item,
     ];
-    await _saveLogs();
   }
 
   Future<void> deleteLog(String logId) async {
     state = state.where((log) => log.id != logId).toList();
-    await _saveLogs();
   }
 
   List<WorkoutLog> getLogsForExercise(String exerciseId) {
@@ -99,8 +71,6 @@ class WorkoutLogsNotifier extends StateNotifier<List<WorkoutLog>> {
 
   Future<void> clearAllLogs() async {
     state = [];
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('workout_logs');
   }
 }
 
@@ -115,73 +85,37 @@ class WorkoutCompletionNotifier
     _loadCompletion();
   }
 
-  Future<void> _loadCompletion() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final completionJson = prefs.getString('workout_completion');
-      if (completionJson != null) {
-        final Map<String, dynamic> decoded = jsonDecode(completionJson);
-        state = decoded.map((key, value) => MapEntry(
-              key,
-              Set<String>.from(value as List),
-            ));
-      }
-    } catch (e) {
-      debugPrint('Error loading completion: $e');
-      state = {};
-    }
-  }
-
-  Future<void> _saveCompletion() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final toSave = state.map((key, value) => MapEntry(key, value.toList()));
-      await prefs.setString('workout_completion', jsonEncode(toSave));
-    } catch (e) {
-      debugPrint('Error saving completion: $e');
-    }
+  void _loadCompletion() {
+    state = WorkoutRepository.getWorkoutCompletion();
   }
 
   Future<void> markExerciseCompleted(
       String workoutDayId, String exerciseId) async {
-    final newState = Map<String, Set<String>>.from(state);
-    if (!newState.containsKey(workoutDayId)) {
-      newState[workoutDayId] = <String>{};
-    }
-    newState[workoutDayId]!.add(exerciseId);
-    state = newState;
-    await _saveCompletion();
+    await WorkoutRepository.markExerciseCompleted(workoutDayId, exerciseId);
+    _loadCompletion(); // Reload state
   }
 
   Future<void> unmarkExercise(String workoutDayId, String exerciseId) async {
-    final newState = Map<String, Set<String>>.from(state);
-    if (newState.containsKey(workoutDayId)) {
-      newState[workoutDayId]!.remove(exerciseId);
-    }
-    state = newState;
-    await _saveCompletion();
+    await WorkoutRepository.unmarkExercise(workoutDayId, exerciseId);
+    _loadCompletion(); // Reload state
   }
 
   bool isExerciseCompleted(String workoutDayId, String exerciseId) {
-    return state[workoutDayId]?.contains(exerciseId) ?? false;
+    return WorkoutRepository.isExerciseCompleted(workoutDayId, exerciseId);
   }
 
   bool isWorkoutDayCompleted(String workoutDayId, int totalExercises) {
-    final completed = state[workoutDayId]?.length ?? 0;
-    return totalExercises > 0 && completed == totalExercises;
+    return WorkoutRepository.isWorkoutDayCompleted(
+        workoutDayId, totalExercises);
   }
 
   double getWorkoutDayProgress(String workoutDayId, int totalExercises) {
-    if (totalExercises == 0) return 0.0;
-    final completed = state[workoutDayId]?.length ?? 0;
-    return completed / totalExercises;
+    return WorkoutRepository.getWorkoutProgress(workoutDayId, totalExercises);
   }
 
   Future<void> clearWorkoutDay(String workoutDayId) async {
-    final newState = Map<String, Set<String>>.from(state);
-    newState.remove(workoutDayId);
-    state = newState;
-    await _saveCompletion();
+    await WorkoutRepository.clearWorkoutDay(workoutDayId);
+    _loadCompletion(); // Reload state
   }
 }
 

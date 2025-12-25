@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'utils/theme.dart';
 import 'routes/router.dart';
 import 'providers/settings_provider.dart';
 import 'services/database_service.dart';
+import 'repositories/workout_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +15,8 @@ void main() async {
   if (!dbResult.isSuccess) {
     debugPrint('Database initialization error: ${dbResult.error}');
   }
+
+  await WorkoutRepository.init();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

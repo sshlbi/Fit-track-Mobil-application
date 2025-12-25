@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../screens/home_screen.dart';
 import '../screens/week_detail_screen.dart';
 import '../screens/workout_day_screen.dart';
@@ -9,6 +10,7 @@ import '../screens/progress_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/rpe_calculator_screen.dart';
 import '../screens/body_weight_tracker_screen.dart';
+import '../screens/program_info_screen.dart';
 import '../models/exercise.dart';
 
 final routerProvider = Provider((ref) {
@@ -89,6 +91,14 @@ final routerProvider = Provider((ref) {
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
           child: const BodyWeightTrackerScreen(),
+        ),
+      ),
+      GoRoute(
+        path: '/program-info',
+        name: 'program-info',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const ProgramInfoScreen(),
         ),
       ),
     ],
