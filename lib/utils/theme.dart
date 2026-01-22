@@ -25,6 +25,15 @@ class AppTheme {
       error: Color(0xFFDC3545),
     ),
     scaffoldBackgroundColor: lightBackground,
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     textTheme: GoogleFonts.interTextTheme().apply(
       bodyColor: lightText,
       displayColor: lightText,
@@ -96,6 +105,15 @@ class AppTheme {
       error: Color(0xFFFF6B6B),
     ),
     scaffoldBackgroundColor: darkBackground,
+    pageTransitionsTheme: const PageTransitionsTheme(
+      builders: {
+        TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+      },
+    ),
     textTheme: GoogleFonts.interTextTheme().apply(
       bodyColor: darkText,
       displayColor: darkText,

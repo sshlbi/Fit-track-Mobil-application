@@ -44,7 +44,7 @@ class WeekDetailScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withAlpha(51),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(
@@ -92,7 +92,7 @@ class WeekDetailScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
+                        color: Colors.white.withAlpha(25),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(

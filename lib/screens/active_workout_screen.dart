@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../models/workout_day.dart';
@@ -647,6 +648,9 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
       _completedSets[key]!.removeWhere((s) => s.setNumber == setNumber);
       _completedSets[key]!.add(setData);
     });
+
+    // Haptic feedback for successful set log
+    HapticFeedback.mediumImpact();
 
     try {
       final result = await DatabaseService.saveSet(setData);

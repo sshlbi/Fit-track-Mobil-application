@@ -52,8 +52,8 @@ class WeekCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                   gradient: LinearGradient(
                     colors: [
-                      Colors.green.withOpacity(0.1),
-                      Colors.green.withOpacity(0.05),
+                      Colors.green.withAlpha(25),
+                      Colors.green.withAlpha(12),
                     ],
                   ),
                 )
@@ -69,7 +69,7 @@ class WeekCard extends ConsumerWidget {
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
-                      color: _getBlockColor(week.block).withOpacity(0.2),
+                      color: _getBlockColor(week.block).withAlpha(51),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -88,7 +88,7 @@ class WeekCard extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.2),
+                        color: Colors.orange.withAlpha(51),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(

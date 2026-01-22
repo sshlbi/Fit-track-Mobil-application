@@ -44,8 +44,8 @@ class WorkoutDayCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                   gradient: LinearGradient(
                     colors: [
-                      Colors.green.withOpacity(0.15),
-                      Colors.green.withOpacity(0.05),
+                      Colors.green.withAlpha(38),
+                      Colors.green.withAlpha(12),
                     ],
                   ),
                 )

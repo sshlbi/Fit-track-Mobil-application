@@ -33,7 +33,7 @@ class ToolCard extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: cardColor.withOpacity(0.1),
+                  color: cardColor.withAlpha(25),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(

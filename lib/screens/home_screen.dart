@@ -36,7 +36,10 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          await Future.delayed(const Duration(milliseconds: 500));
+          // Invalidate providers to reload data
+          ref.invalidate(programDataProvider);
+          ref.invalidate(currentWeekProvider);
+          await Future.delayed(const Duration(milliseconds: 300));
         },
         child: ListView(
           padding: const EdgeInsets.all(16),
@@ -81,11 +84,11 @@ class HomeScreen extends ConsumerWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.white.withAlpha(51),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            '${((currentWeek / 12) * 100).toInt()}%',
+                            '${((currentWeek / weeks.length) * 100).toInt()}%',
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -98,7 +101,7 @@ class HomeScreen extends ConsumerWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: LinearProgressIndicator(
-                        value: currentWeek / 12,
+                        value: currentWeek / weeks.length,
                         minHeight: 8,
                         backgroundColor: Colors.white24,
                         valueColor: const AlwaysStoppedAnimation(Colors.white),
@@ -221,7 +224,7 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.chevron_right),
-                      onPressed: currentWeek < 12
+                      onPressed: currentWeek < weeks.length
                           ? () =>
                               ref.read(currentWeekProvider.notifier).nextWeek()
                           : null,
@@ -232,7 +235,7 @@ class HomeScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             ...List.generate(
-              12,
+              weeks.length,
               (index) => Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: WeekCard(

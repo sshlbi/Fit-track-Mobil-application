@@ -40,8 +40,8 @@ class ExerciseCard extends ConsumerWidget {
                   borderRadius: BorderRadius.circular(12),
                   gradient: LinearGradient(
                     colors: [
-                      Colors.green.withOpacity(0.1),
-                      Colors.green.withOpacity(0.03),
+                      Colors.green.withAlpha(25),
+                      Colors.green.withAlpha(7),
                     ],
                   ),
                 )
@@ -125,7 +125,7 @@ class ExerciseCard extends ConsumerWidget {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withAlpha(25),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(

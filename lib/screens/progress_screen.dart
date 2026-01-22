@@ -128,7 +128,7 @@ class ProgressScreen extends ConsumerWidget {
                   return Card(
                     margin: const EdgeInsets.only(bottom: 12),
                     color: isCurrentWeek
-                        ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                        ? Theme.of(context).colorScheme.primary.withAlpha(25)
                         : null,
                     child: Padding(
                       padding: const EdgeInsets.all(16),

@@ -66,7 +66,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
                           color: Theme.of(context)
                               .colorScheme
                               .primary
-                              .withOpacity(0.1),
+                              .withAlpha(25),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Icon(
@@ -120,7 +120,7 @@ class _ExerciseDetailScreenState extends ConsumerState<ExerciseDetailScreen> {
           if (widget.exercise.technique != 'N/A') ...[
             const SizedBox(height: 16),
             Card(
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withAlpha(25),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
