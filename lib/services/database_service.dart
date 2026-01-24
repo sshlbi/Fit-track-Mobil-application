@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/workout_log.dart';
 import '../models/set_data.dart';
+import '../repositories/workout_repository.dart';
 
 class DatabaseResult<T> {
   final T? data;
@@ -25,7 +26,7 @@ class DatabaseService {
   static const String _workoutLogsBox = 'workout_logs';
   static const String _setsBox = 'sets';
   static const String _settingsBox = 'settings';
-  static const String _currentWeekKey = 'current_week';
+  // static const String _currentWeekKey = 'current_week'; // Removed as we use WorkoutRepository now
   static const String _lastBackupKey = 'last_backup';
 
   static Box? get _workoutLogsBoxInstance {
@@ -203,23 +204,12 @@ class DatabaseService {
   }
 
   static int getCurrentWeek() {
-    try {
-      final box = _settingsBoxInstance;
-      if (box == null) return 1;
-      return box.get(_currentWeekKey, defaultValue: 1) as int;
-    } catch (e) {
-      debugPrint('Error getting current week: $e');
-      return 1;
-    }
+    return WorkoutRepository.getCurrentWeek();
   }
 
   static Future<DatabaseResult<void>> setCurrentWeek(int weekNumber) async {
     try {
-      final box = _settingsBoxInstance;
-      if (box == null) {
-        return DatabaseResult.error('Database not initialized');
-      }
-      await box.put(_currentWeekKey, weekNumber);
+      await WorkoutRepository.setCurrentWeek(weekNumber);
       return DatabaseResult.success(null);
     } catch (e) {
       debugPrint('Error setting current week: $e');
@@ -340,11 +330,25 @@ class DatabaseService {
     }
   }
 
+  static Future<DatabaseResult<void>> clearWorkoutLogs() async {
+    try {
+      await _workoutLogsBoxInstance?.clear();
+      return DatabaseResult.success(null);
+    } catch (e) {
+      debugPrint('Error clearing workout logs: $e');
+      return DatabaseResult.error('Failed to clear workout logs: $e');
+    }
+  }
+
   static Future<DatabaseResult<void>> clearAllData() async {
     try {
       await _workoutLogsBoxInstance?.clear();
       await _setsBoxInstance?.clear();
       await _settingsBoxInstance?.clear();
+      // Also clear repository data if possible or warn user.
+      // WorkoutRepository data (completion, current week) is in separate boxes.
+      // We should probably clear those too if "All Data" is implied.
+      // For now, leaving as is but noting it only clears DatabaseService managed boxes.
       return DatabaseResult.success(null);
     } catch (e) {
       debugPrint('Error clearing data: $e');

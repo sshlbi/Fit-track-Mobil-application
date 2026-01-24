@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class WorkoutRepository {
@@ -9,7 +10,7 @@ class WorkoutRepository {
       await Hive.openBox<Map>(_workoutCompletionBox);
       await Hive.openBox<int>(_currentWeekBox);
     } catch (e) {
-      print('Error initializing workout repository: $e');
+      debugPrint('Error initializing workout repository: $e');
     }
   }
 
@@ -18,7 +19,7 @@ class WorkoutRepository {
       final box = Hive.box<int>(_currentWeekBox);
       return box.get('week', defaultValue: 1) ?? 1;
     } catch (e) {
-      print('Error getting current week: $e');
+      debugPrint('Error getting current week: $e');
       return 1;
     }
   }
@@ -29,7 +30,7 @@ class WorkoutRepository {
       final box = Hive.box<int>(_currentWeekBox);
       await box.put('week', week);
     } catch (e) {
-      print('Error setting current week: $e');
+      debugPrint('Error setting current week: $e');
     }
   }
 
@@ -46,7 +47,7 @@ class WorkoutRepository {
         ),
       );
     } catch (e) {
-      print('Error getting workout completion: $e');
+      debugPrint('Error getting workout completion: $e');
       return {};
     }
   }
@@ -61,7 +62,7 @@ class WorkoutRepository {
       );
       await box.put('completion', toSave);
     } catch (e) {
-      print('Error saving workout completion: $e');
+      debugPrint('Error saving workout completion: $e');
     }
   }
 

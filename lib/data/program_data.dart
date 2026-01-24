@@ -1,4 +1,5 @@
 import '../models/week.dart';
+import '../models/workout_day.dart';
 import 'weeks/week_1_data.dart';
 import 'weeks/week_2_data.dart';
 import 'weeks/week_3_data.dart';
@@ -48,11 +49,33 @@ class ProgramData {
   }
 
   static Map<String, dynamic> getProgramStats() {
+    final weeks = getAllWeeks();
+    final totalWeeks = weeks.length;
+    
+    int totalWorkoutDays = 0;
+    int deloadWeeks = 0;
+    final Set<String> uniqueExercises = {};
+
+    for (final week in weeks) {
+      if (week.isDeload) {
+        deloadWeeks++;
+      }
+
+      for (final day in week.workoutDays) {
+        if (day.type != WorkoutType.rest) {
+          totalWorkoutDays++;
+          for (final exercise in day.exercises) {
+            uniqueExercises.add(exercise.id);
+          }
+        }
+      }
+    }
+
     return {
-      'weeks': 12,
-      'blocks': 3,
-      'exercises_per_week': 16,
-      'estimated_sessions': 48,
+      'totalWeeks': totalWeeks,
+      'totalWorkoutDays': totalWorkoutDays,
+      'totalExercises': uniqueExercises.length,
+      'deloadWeeks': deloadWeeks,
     };
   }
 }

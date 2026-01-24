@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../providers/settings_provider.dart';
 import '../providers/workout_provider.dart';
 
+
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 

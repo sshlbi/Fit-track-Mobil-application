@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
 import '../models/workout_log.dart';
+import '../services/database_service.dart';
 import '../data/program_data.dart';
 import '../repositories/workout_repository.dart';
 
@@ -42,22 +44,44 @@ class WorkoutLogsNotifier extends StateNotifier<List<WorkoutLog>> {
   }
 
   Future<void> _loadLogs() async {
-    state = [];
+    final result = DatabaseService.getAllWorkoutLogs();
+    if (result.isSuccess && result.data != null) {
+      state = result.data!;
+    } else {
+      // Handle error or empty state
+      state = [];
+    }
   }
 
   Future<void> addLog(WorkoutLog log) async {
-    state = [...state, log];
+    final result = await DatabaseService.saveWorkoutLog(log);
+    if (result.isSuccess) {
+      state = [...state, log];
+    } else {
+      // Handle error
+      debugPrint('Failed to save log: ${result.error}');
+    }
   }
 
   Future<void> updateLog(WorkoutLog log) async {
-    state = [
-      for (final item in state)
-        if (item.id == log.id) log else item,
-    ];
+    final result = await DatabaseService.saveWorkoutLog(log);
+    if (result.isSuccess) {
+      state = [
+        for (final item in state)
+          if (item.id == log.id) log else item,
+      ];
+    } else {
+      debugPrint('Failed to update log: ${result.error}');
+    }
   }
 
   Future<void> deleteLog(String logId) async {
-    state = state.where((log) => log.id != logId).toList();
+    final result = await DatabaseService.deleteWorkoutLog(logId);
+    if (result.isSuccess) {
+      state = state.where((log) => log.id != logId).toList();
+    } else {
+      debugPrint('Failed to delete log: ${result.error}');
+    }
   }
 
   List<WorkoutLog> getLogsForExercise(String exerciseId) {
@@ -70,7 +94,12 @@ class WorkoutLogsNotifier extends StateNotifier<List<WorkoutLog>> {
   }
 
   Future<void> clearAllLogs() async {
-    state = [];
+    final result = await DatabaseService.clearWorkoutLogs();
+    if (result.isSuccess) {
+      state = [];
+    } else {
+      debugPrint('Failed to clear logs: ${result.error}');
+    }
   }
 }
 
